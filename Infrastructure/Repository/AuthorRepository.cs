@@ -7,85 +7,76 @@ namespace Infrastructure.Repository;
 
 public class AuthorRepository : IAuthorRepository
 {
-    public void AddAuthor(Author author)
+    public async Task AddAuthor(Author author)
     {
         using var conn = DataBase.Connection();
         conn.Open();
         var query = "insert into authors(fullname, country, birthyear)values(@fullname, @country, @birthyear)";
-        conn.Execute(query, author);
-        System.Console.WriteLine("Author added !!");
+        await conn.ExecuteAsync(query, author);
     }
 
-    public void DeleteAuthor(int id)
+    public async Task DeleteAuthor(int id)
     {
         using var conn = DataBase.Connection();
         conn.Open();
         var query = "delete from authors where id = @id";
-        conn.Execute(query, id);
+        await conn.ExecuteAsync(query, id);
         System.Console.WriteLine("Author deleted !!");
     }
 
-    public Author? GetAuthor(int id)
+    public Task<Author> GetAuthor(int id)
     {
         using var conn = DataBase.Connection();
         conn.Open();
         var query = "select * from authors where id = @id";
-        var auth = conn.QuerySingleOrDefault<Author>(query, new { id });
+        var auth = conn.QuerySingleAsync<Author>(query, new { id });
         return auth;
     }
 
-    public int GetAuthorAmount()
+    public Task<int> GetAuthorAmount()
     {
         using var conn = DataBase.Connection();
         conn.Open();
         var query = "select count(*) from authors";
-        var count = conn.ExecuteScalar(query);
-        return Convert.ToInt32(count);
+        var count = conn.ExecuteAsync(query);
+        return count;
     }
 
 
-    public List<Author> GetAuthors()
+    public async Task<List<Author>> GetAuthors()
     {
         using var conn = DataBase.Connection();
         conn.Open();
         var query = "select * from authors";
-        var author = conn.Query<Author>(query).ToList();
-        return author;
+        var author = await conn.QueryAsync<Author>(query);
+        return author.ToList();
     }
 
-    public int GetMaxPublishedYearByAuthor(int authorid)
+    public async Task<int> GetMaxPublishedYearByAuthor(int authorid)
     {
         using var conn = DataBase.Connection();
         conn.Open();
         var query = "select max(publishedyear) from book where authorid = @authorid";
-        var author = conn.ExecuteScalar(query, authorid);
-        return Convert.ToInt32(author);
+        var author = await conn.ExecuteAsync(query, authorid);
+        return author;
     }
 
-    public int GetMinPublishedYearByAuthor(int authorid)
+    public async Task<int> GetMinPublishedYearByAuthor(int authorid)
     {
         using var conn = DataBase.Connection();
         conn.Open();
         var query = "select min(publishedyear) from book where authorid = @authorid";
-        var author = conn.ExecuteScalar<int>(query, authorid);
+        var author = await conn.ExecuteAsync(query, authorid);
         return author;
     }
 
 
-    public void UpdateAuthor(Author author)
+    public async Task UpdateAuthor(Author author)
     {
         using var conn = DataBase.Connection();
         conn.Open();
         var query = "update authors set fullname = @fullname, country = @country, birthyear = @birthyear where id = @id";
-        var auth = conn.QuerySingleOrDefault(query, author);
-        if (auth == 0)
-        {
-            System.Console.WriteLine("Not fiend");
-        }
-        else
-        {
-            System.Console.WriteLine("Author updated !!");
-        }
+        var auth = await conn.ExecuteAsync(query, author);
     }
 
 }

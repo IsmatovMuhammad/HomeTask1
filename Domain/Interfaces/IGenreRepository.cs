@@ -5,12 +5,12 @@ namespace Domain.Interfaces;
 
 public interface IGenreRepository
 {
-    void AddGenre(Genre genre);
-    int GetGenreAmount();
-    int GetMinPublishedYearByGenre(int genreid);
-    int GetMaxPublishedYearByGenre(int genreid);
-    List<Genre> GetGenres();
-    Genre GetGenre(int id);
-    void Deletegenre(int id);
-    void UpdateGenre(Genre genre);
+    Task AddGenre(Genre genre);
+    Task<int> GetGenreAmount();
+    Task<int> GetMinPublishedYearByGenre(int genreid);
+    Task<int> GetMaxPublishedYearByGenre(int genreid);
+    Task<List<Genre>> GetGenres();
+    Task<Genre> GetGenre(int id);
+    Task Deletegenre(int id);
+    Task UpdateGenre(Genre genre);
 }

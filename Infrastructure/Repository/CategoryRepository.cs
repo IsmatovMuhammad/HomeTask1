@@ -7,56 +7,56 @@ namespace Infrastructure.Repository;
 
 public class CategoryRepository : ICategoryRepository
 {
-    public void AddCategory(Category category)
+    public async Task AddCategory(Category category)
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "insert into categories(name)values(@name)";
-        conn.Execute(query, category);
+        await conn.ExecuteAsync(query, category);
     }
 
-    public void DeleteCategory(int id)
+    public async Task DeleteCategory(int id)
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "delete from categories where id = @id";
-        conn.Execute(query, id);
+        await conn.ExecuteAsync(query, id);
     }
 
-    public int GetAmountOfCategories()
+    public async Task<int> GetAmountOfCategories()
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "select count(*) from categories";
-        var category = conn.ExecuteScalar<int>(query);
+        var category = await conn.ExecuteAsync(query);
         return category;
     }
 
 
-    public List<Category> GetCategories()
+    public async Task<List<Category>> GetCategories()
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "select * from categories";
-        var category = conn.Query<Category>(query).ToList();
-        return category;
+        var category = await conn.QueryAsync<Category>(query);
+        return category.ToList();
     }
 
-    public Category? GetCategory(int id)
+    public async Task<Category> GetCategory(int id)
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "select * from categories where id = @id";
-        var category = conn.QuerySingleOrDefault<Category>(query);
+        var category = await conn.QuerySingleAsync<Category>(query);
         return category;
     }
 
-    public void UpdateCategory(Category category)
+    public async Task UpdateCategory(Category category)
     {
         using var conn = DataBase.Connection();
         conn.Open();
         var query = "update categories set name = @name where id = @id";
-        conn.Execute(query, category);
+        await conn.ExecuteAsync(query, category);
     }
 
 }

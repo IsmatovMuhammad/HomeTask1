@@ -8,113 +8,113 @@ namespace Infrastructure.Repository;
 
 public class ProductRepository : IProductRepository
 {
-    public void AddProduct(Product product)
+    public async Task AddProduct(Product product)
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "insert into products(name, price, quantity, categoryid)values(@name, @price, @quantity, @categoryid)";
-        conn.Execute(query, product);
+        await conn.ExecuteAsync(query, product);
         System.Console.WriteLine("Product add!!");
     }
 
-    public void DeleteProduct(int id)
+    public async Task DeleteProduct(int id)
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "delete from products where id = @id";
-        conn.Execute(query, id);
+        await conn.ExecuteAsync(query, id);
         System.Console.WriteLine("Product deleted !!");
     }
 
-    public int GetAmountOfProducts()
+    public async Task<int> GetAmountOfProducts()
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "select count(*) from products";
-        var product = conn.ExecuteScalar<int>(query);
+        var product = await conn.ExecuteAsync(query);
         return product;
     }
 
-    public int GetAmountOfProductsByCategory(int categoryId)
+    public async Task<int> GetAmountOfProductsByCategory(int categoryId)
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "select count(*) from products where categoryid = @categoryid";
-        var product = conn.ExecuteScalar<int>(query, categoryId);
+        var product = await conn.ExecuteAsync(query, categoryId);
         return product;
     }
 
-    public int GetAveragePriceOfProductByCategory(int categoryId)
+    public async Task<int> GetAveragePriceOfProductByCategory(int categoryId)
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "select avg(price) from products where categoryid = @categoryid";
-        var product = conn.ExecuteScalar<int>(query, categoryId);
+        var product = await conn.ExecuteAsync(query, categoryId);
         return product;
     }
 
 
-    public int GetMaxPriceOfProductByCategory(int categoryId)
+    public async Task<int> GetMaxPriceOfProductByCategory(int categoryId)
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "select max(price) from products where categoryid = @categoryid";
-        var product = conn.ExecuteScalar<int>(query, categoryId);
+        var product = await conn.ExecuteAsync(query, categoryId);
         return product;
     }
 
-    public int GetMinPriceOfProductByCategory(int categoryId)
+    public async Task<int> GetMinPriceOfProductByCategory(int categoryId)
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "select min(price) from products where categoryid = @categoryid";
-        var product = conn.ExecuteScalar<int>(query, categoryId);
+        var product = await conn.ExecuteAsync(query, categoryId);
         return product;
     }
 
 
-    public Product? GetProduct(int id)
+    public async Task<Product> GetProduct(int id)
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "Select * from products where id = @id";
-        var product = conn.QuerySingleOrDefault(query, id);
+        var product = await conn.QuerySingleAsync(query, id);
         return product;
     }
 
-    public List<Product> GetProducts()
+    public async Task<List<Product>> GetProducts()
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "select * from products";
-        var product = conn.Query<Product>(query).ToList();
-        return product;
+        var product = await conn.QueryAsync<Product>(query);
+        return product.ToList();
     }
 
-    public Product? GetProductsByCategory(int categoryId)
+    public async Task<Product> GetProductsByCategory(int categoryId)
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "select * from products where categoryid = @categoryid";
-        var product = conn.QuerySingleOrDefault(query, categoryId);
+        var product = await conn.QuerySingleAsync(query, categoryId);
         return product;
     }
 
-    public int GetTotalPriceOfProducts()
+    public async Task<int> GetTotalPriceOfProducts()
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "select sum(price) from products";
-        var product = conn.ExecuteScalar<int>(query);
+        var product =  await conn.ExecuteAsync(query);
         return product;
     }
 
-    public void UpdateProduct(Product product)
+    public async Task UpdateProduct(Product product)
     {
         using var conn = AppData.Connection();
         conn.Open();
         var query = "update products set name = @name, price = @price, quantity = @quantity, categoryid = @categoryid";
-        conn.Execute(query, product);
+        await conn.ExecuteAsync(query, product);
         System.Console.WriteLine("Product updated !!");
     }
 
